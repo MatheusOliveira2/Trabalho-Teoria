@@ -90,6 +90,27 @@ def moveRight(posicao, maquina):
         posicao = posicao + 1
     return posicao
 
+def maiorEstadocomTransicao(maquina):
+    posicao = len(maquina)-4
+    #print(maquina[posicao])
+    ultimaPosicao = -1
+    countZero = 0
+    while(countZero <2):
+        if(maquina[posicao] == "0"):
+            countZero = countZero+1
+            posicao = posicao -1
+        else:
+            countZero = 0
+            posicao = posicao -1
+    posicao = posicao+1
+    while(maquina[posicao]!="1"):
+        posicao = posicao+1
+
+    while(maquina[posicao]== "1"):
+        ultimaPosicao = ultimaPosicao+1
+        posicao = posicao+1
+
+    return ultimaPosicao
 #função utilizada para transformar cada transição em representação unária em um objeto do tipo Transição
 def decodificaMaquina(maquina):
     transicoes = []
@@ -124,8 +145,7 @@ def decodificaMaquina(maquina):
             posicao = posicao +1
         
         oEstado = Transicao(estadoDestino,troca,movimento,estadoAtual,leitura)        
-        
-        if(estadoAtualAux == estadoAtual):
+        if((estadoAtualAux == estadoAtual)):
             estado.append(oEstado)
         else:
             transicoes.append(estado)
@@ -133,6 +153,12 @@ def decodificaMaquina(maquina):
             estado.append(oEstado)
             estadoAtualAux = oEstado.estadoAtual
         posicao = moveRight(posicao,maquina)
+    
+    if(oEstado.estadoAtual == maiorEstadocomTransicao(maquina)):
+        if(oEstado not in estado):
+            estado.append(oEstado)
+        transicoes.append(estado)
+    
     return transicoes
 
 #execução da máquina
@@ -191,6 +217,7 @@ def main():
     if(verificaMTU(arquivo) == True ):
         maquina,palavra = decodificaEntrada(arquivo)
         fita = decodificaFita(palavra)
+        maiorEstadocomTransicao(maquina)
         transicoes = decodificaMaquina(maquina)
         executar(transicoes,fita)
     
