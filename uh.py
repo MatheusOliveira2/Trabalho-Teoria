@@ -3,9 +3,11 @@ import re
 import os
 import time
 
+#variáveis para mudar cores no terminal
 RED   = "\033[1;31m"
 RESET = "\033[0;0m"
 
+#classe para representar cada transição de cada estado
 class Transicao:
     def __init__(self,estadoDestino,troca,movimento,estadoAtual,leitura):
         self.estadoDestino = estadoDestino
@@ -14,14 +16,17 @@ class Transicao:
         self.estadoAtual = estadoAtual
         self.leitura = leitura
 
+#função para decodificar os símbolos da fita de entrada
 def simbolo(valor):
     dic = {1: 'a', 2:'b',3:'B'}
     return(dic[valor])
 
+#função para decodificar os movimentos da cabeça de leitura
 def direcao(valor):
     dic = {1: 'R', 2:'L'}
     return(dic[valor])
 
+#separa a representação da máquina da palavra e retorna duas listas
 def decodificaEntrada(entrada):
     maquina = []
     palavra = []
@@ -43,6 +48,7 @@ def decodificaEntrada(entrada):
         
     return maquina,palavra
 
+#função utilizada para ler o arquivo
 def lerArquivo():
     arquivo = sys.argv[1]
     f = open(arquivo,'r')
@@ -50,6 +56,7 @@ def lerArquivo():
     f.close()
     return data
 
+#função utilizada para verificar se a máquina e a palavra de entrada são válidas utilizando expressão regular
 def verificaMTU(texto):
     expressao="(000)(((1+)(0)(1+)(0)(1+)(0)(1+)(0)(1+)00))*((1+)(0)(1+)(0)(1+)(0)(1+)(0)(1+))(000)(1+)(01+)*(000)"
     x = bool(re.match(expressao,str(texto)))
@@ -59,6 +66,7 @@ def verificaMTU(texto):
         print("False")
         return False
 
+#decodifica a palavra de entrada com representação unária para Strings
 def decodificaFita(palavra):
     fitaEntrada = []
     count = 0
@@ -74,14 +82,15 @@ def decodificaFita(palavra):
     
     fitaEntrada.append("B")
     
-    #print(fitaEntrada)
     return fitaEntrada
 
+#função utilizada para achar a próxima transição na representação unária
 def moveRight(posicao, maquina):
     while(maquina[posicao]!="1" and posicao < len(maquina)-1):
         posicao = posicao + 1
     return posicao
 
+#função utilizada para transformar cada transição em representação unária em um objeto do tipo Transição
 def decodificaMaquina(maquina):
     transicoes = []
     estado = []
@@ -114,7 +123,6 @@ def decodificaMaquina(maquina):
             movimento = movimento + 1
             posicao = posicao +1
         
-        #print(estadoAtual, " ", simbolo(leitura), " ", estadoDestino, " ", simbolo(troca), " ", direcao(movimento)) 
         oEstado = Transicao(estadoDestino,troca,movimento,estadoAtual,leitura)        
         
         if(estadoAtualAux == estadoAtual):
@@ -127,7 +135,7 @@ def decodificaMaquina(maquina):
         posicao = moveRight(posicao,maquina)
     return transicoes
 
-
+#execução da máquina
 def executar(transicoes,fita):
     os.system("clear")
     estadoAtual = 0
@@ -161,7 +169,7 @@ def executar(transicoes,fita):
                         print(fita[j],end="")
                 print(RESET)
                 time.sleep(1)
-                #os.system("clear") 
+                os.system("clear") 
                 break
 
         if(not achouTransicao):
@@ -178,13 +186,6 @@ def executar(transicoes,fita):
                     print(fita[j],end="")
     print()
                 
-
-        
-         
-            
-        
-       
-
 def main():
     arquivo = lerArquivo()
     if(verificaMTU(arquivo) == True ):
