@@ -183,7 +183,21 @@ def executar(transicoes,fita):
                 elif(direcao(transicoes[estadoAtual][i].movimento) == "L"):
                     posicaoFita = posicaoFita-1
                 
-                estadoAtual = transicoes[estadoAtual][i].estadoDestino
+                if(transicoes[estadoAtual][i].estadoDestino != len(transicoes)):
+                    estadoAtual = transicoes[estadoAtual][i].estadoDestino
+                else:
+                    estadoAtual = transicoes[estadoAtual][i].estadoDestino
+                    for j in range(len(fita)):
+                        if(j==posicaoFitaAux):
+                            print(RED,end="")
+                            print(fita[j],end="")
+                        else:
+                            print(RESET,end="")
+                            print(fita[j],end="")
+                    print(RESET)
+                    time.sleep(0.7)
+                    os.system("clear")
+                    break
                 if(estadoAtual <= len(transicoes)): 
                     achouTransicao = True
                 for j in range(len(fita)):
@@ -194,15 +208,17 @@ def executar(transicoes,fita):
                         print(RESET,end="")
                         print(fita[j],end="")
                 print(RESET)
-                time.sleep(1)
-                os.system("clear") 
+                time.sleep(0.7)
+                os.system("clear")
                 break
 
         if(not achouTransicao):
             terminou = True
+
     print("Estado Atual:", estadoAtual)
     print("Conteudo da Fita:", fita[posicaoFita])
     print("Direcao Cabeça de Leitura: NULL")
+
     for j in range(len(fita)):
         if(j==posicaoFita):
                     print(RED,end="")
@@ -211,6 +227,7 @@ def executar(transicoes,fita):
                     print(RESET,end="")
                     print(fita[j],end="")
     print()
+    
                 
 def main():
     arquivo = lerArquivo()
