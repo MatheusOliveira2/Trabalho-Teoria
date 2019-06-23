@@ -167,11 +167,16 @@ def executar(transicoes,fita):
     estadoAtual = 0
     terminou = False
     posicaoFita = 0
+    loop= False
     while(not terminou):    
         achouTransicao = False
         for i in range(len(transicoes[estadoAtual])):
-            if(simbolo(transicoes[estadoAtual][i].leitura) == fita[posicaoFita]):
-                
+            if((simbolo(transicoes[estadoAtual][i].leitura) != fita[posicaoFita] )):
+                if(len(fita)-1 != int(posicaoFita)):
+                    loop= True
+            else:
+                print(len(fita)-1)
+                print(int(posicaoFita))
                 print("Estado Atual:", estadoAtual)
                 print("Conteudo da Fita:", fita[posicaoFita])
                 print("Direcao Cabeça de Leitura:",direcao(transicoes[estadoAtual][i].movimento))
@@ -214,7 +219,7 @@ def executar(transicoes,fita):
 
         if(not achouTransicao):
             terminou = True
-
+ 
     print("Estado Atual:", estadoAtual)
     print("Conteudo da Fita:", fita[posicaoFita])
     print("Direcao Cabeça de Leitura: NULL")
@@ -227,6 +232,11 @@ def executar(transicoes,fita):
                     print(RESET,end="")
                     print(fita[j],end="")
     print()
+    if(loop):
+        print("Esta máquina entra em loop para esta entrada.")
+    else:
+        print("Esta máquina não entra em loop para esta entrada.")
+    
     
                 
 def main():
@@ -237,6 +247,7 @@ def main():
         maiorEstadocomTransicao(maquina)
         transicoes = decodificaMaquina(maquina)
         executar(transicoes,fita)
+
     
     else:
         print("Entrada inválida")
