@@ -175,8 +175,6 @@ def executar(transicoes,fita):
                 if(len(fita)-1 != int(posicaoFita)):
                     loop= True
             else:
-                print(len(fita)-1)
-                print(int(posicaoFita))
                 print("Estado Atual:", estadoAtual)
                 print("Conteudo da Fita:", fita[posicaoFita])
                 print("Direcao Cabeça de Leitura:",direcao(transicoes[estadoAtual][i].movimento))
