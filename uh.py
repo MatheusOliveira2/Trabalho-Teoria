@@ -163,50 +163,66 @@ def decodificaMaquina(maquina):
 
 #execução da máquina
 def executar(transicoes,fita):
-    #os.system("clear")
+    os.system("clear")
     estadoAtual = 0
     terminou = False
     posicaoFita = 0
-    while(not terminou):    
+    loopH1= False
+    loopH2= False 
+    while(not terminou):
         achouTransicao = False
         for i in range(len(transicoes[estadoAtual])):
-            if(simbolo(transicoes[estadoAtual][i].leitura) == fita[posicaoFita]):
-                print("Estado Atual:", estadoAtual)
-                print("Conteudo da Fita:", fita[posicaoFita])
-                print("Direcao Cabeça de Leitura:",direcao(transicoes[estadoAtual][i].movimento))
-                print("Troca por: ", simbolo(transicoes[estadoAtual][i].troca))
-                fita[posicaoFita] = simbolo(transicoes[estadoAtual][i].troca)
-                posicaoFitaAux = posicaoFita
-                if(direcao(transicoes[estadoAtual][i].movimento) == "R"):
-                    posicaoFita = posicaoFita+1
-                elif(direcao(transicoes[estadoAtual][i].movimento) == "L"):
-                    posicaoFita = posicaoFita-1
-                estadoAtual = transicoes[estadoAtual][i].estadoDestino
-                print("estadoAtual:",estadoAtual)
-
-                for j in range(len(fita)):
-                    if(j==posicaoFitaAux):
-                        print(RED,end="")
-                        print(fita[j],end="")
-                    else:
-                        print(RESET,end="")
-                        print(fita[j],end="")                        
-                print(RESET)
-                if(estadoAtual >= len(transicoes)):
-                    achouTransicao = False
+            if(len(transicoes[estadoAtual]) == 3):
+                if(transicoes[estadoAtual][0].estadoAtual == transicoes[estadoAtual][0].estadoDestino and transicoes[estadoAtual][1].estadoAtual == transicoes[estadoAtual][1].estadoDestino and transicoes[estadoAtual][2].estadoAtual == transicoes[estadoAtual][0].estadoDestino):
+                    if(len(fita)-1 != int(posicaoFita) and len(fita)-1 != int(posicaoFita)-1):
+                        loopH2=True
+                        break
+                if(transicoes[transicoes[estadoAtual][0].estadoDestino][0].estadoAtual==transicoes[transicoes[estadoAtual][0].estadoDestino][0].estadoDestino and transicoes[transicoes[estadoAtual][1].estadoDestino][1].estadoAtual==transicoes[transicoes[estadoAtual][1].estadoDestino][1].estadoDestino and transicoes[transicoes[estadoAtual][2].estadoDestino][2].estadoAtual==transicoes[transicoes[estadoAtual][2].estadoDestino][2].estadoDestino):
+                    loopH1=False
+                    loopH2=False
                     break
+            if(not loopH2):
+                if(simbolo(transicoes[estadoAtual][i].leitura) != fita[posicaoFita]):
+                    if(len(fita)-1 != int(posicaoFita)):
+                        loopH1= True
 
-                achouTransicao = True
-                time.sleep(0.7)
-                os.system("clear")
+                else:
+                    loopH1=False
+                    print("Estado Atual:", estadoAtual)
+                    print("Conteudo da Fita:", fita[posicaoFita])
+                    print("Direcao Cabeça de Leitura:",direcao(transicoes[estadoAtual][i].movimento))
+                    print("Troca por: ", simbolo(transicoes[estadoAtual][i].troca))
+                    fita[posicaoFita] = simbolo(transicoes[estadoAtual][i].troca)
+                    posicaoFitaAux = posicaoFita
+                    if(direcao(transicoes[estadoAtual][i].movimento) == "R"):
+                        posicaoFita = posicaoFita+1
+                    elif(direcao(transicoes[estadoAtual][i].movimento) == "L"):
+                        posicaoFita = posicaoFita-1
+                    estadoAtual = transicoes[estadoAtual][i].estadoDestino
+
+                    for j in range(len(fita)):
+                        if(j==posicaoFitaAux):
+                            print(RED,end="")
+                            print(fita[j],end="")
+                        else:
+                            print(RESET,end="")
+                            print(fita[j],end="")                        
+                    print(RESET)
+                    if(estadoAtual >= len(transicoes)):
+                        achouTransicao = False
+                        break
+
+                    achouTransicao = True
+                    time.sleep(0.7)
+                    os.system("clear")
     
-
         if(not achouTransicao):
             terminou = True
 
     time.sleep(0.7)
     os.system("clear")
-
+    if(posicaoFita>=len(fita)-1):
+        posicaoFita = len(fita)-1
     print("Estado Atual:", estadoAtual)
     print("Conteudo da Fita:", fita[posicaoFita])
     print("Direcao Cabeça de Leitura: NULL")
@@ -220,6 +236,13 @@ def executar(transicoes,fita):
                     print(fita[j],end="")
     
     print()
+    if(loopH1 or loopH2):
+        if(loopH1):
+            print("Esta maquina entraria em loop(através da Heuristica Decididora) para esta entrada.")
+        if(loopH2):
+            print("Esta maquina entraria em loop(através da Heuristica Reconhecedora) para esta entrada.")
+    else:
+        print("Esta maquina NAO entraria em loop para esta entrada.")
     
                 
 def main():
